@@ -9,7 +9,7 @@
 VAGRANTFILE_API_VERSION = "2"
  
 # You can override those vars by using shell environment vars 
-vb_box = (ENV['VAGRANT_VB_BOX'] || 'deimosfr/debian-wheezy')
+vb_box = (ENV['VAGRANT_VB_BOX'] || 'iknite/trusty64')
 # Workaround for mitchellh/vagrant#1867 / source: https://groups.google.com/forum/#!topic/vagrant-up/XIxGdm78s4I
 if ARGV[1] and \
     (ARGV[1].split('=')[0] == "--provider" or ARGV[2])
