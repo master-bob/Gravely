@@ -1,9 +1,13 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Created by Pierre Mavro 
+# Modified by Leonardo Canessa
+#   with Docker as the default provider
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
-
+ 
 # You can override those vars by using shell environment vars 
 vb_box = (ENV['VAGRANT_VB_BOX'] || 'deimosfr/debian-wheezy')
 # Workaround for mitchellh/vagrant#1867 / source: https://groups.google.com/forum/#!topic/vagrant-up/XIxGdm78s4I
@@ -11,18 +15,18 @@ if ARGV[1] and \
     (ARGV[1].split('=')[0] == "--provider" or ARGV[2])
     provider = (ARGV[1].split('=')[1] || ARGV[2])
 else
-    provider = (ENV['VAGRANT_DEFAULT_PROVIDER'] || :virtualbox).to_sym
+    provider = (ENV['VAGRANT_DEFAULT_PROVIDER'] || :docker).to_sym
 end
-
+ 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-
+ 
     # VirtualBox settings
     if "#{provider}" == "virtualbox"
         config.vm.provider "virtualbox" do |vb|
             config.vm.box = "#{vb_box}"
         end
     end
-
+ 
     # Docker settings
     if "#{provider}" == "docker"
         config.vm.provider "docker" do |d|
@@ -32,25 +36,25 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             config.ssh.username = "root"
         end
     end
-
-    # Web servers
-    config.vm.define 'web1' do |machine|
-        config.vm.host_name = 'web1'
+ 
+    # PHP servers
+    config.vm.define 'php1' do |machine|
+        config.vm.host_name = 'php1'
         config.vm.provider "virtualbox" do |vb|
             vb.customize ["modifyvm", :id, "--memory", "384"]
         end
         config.vm.network "public_network", :bridge => 'wlan0'
         config.ssh.forward_agent = true
     end
-
-    # SQL servers
-    config.vm.define 'sql1' do |machine|
-        config.vm.host_name = 'sql1'
+ 
+    # Database servers
+    config.vm.define 'database1' do |machine|
+        config.vm.host_name = 'database1'
         config.vm.provider "virtualbox" do |vb|
             vb.customize ["modifyvm", :id, "--memory", "512"]
         end
         config.vm.network "public_network", :bridge => 'wlan0'
         config.ssh.forward_agent = true
     end
-
+ 
 end
