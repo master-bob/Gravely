@@ -44,7 +44,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vb.customize ["modifyvm", :id, "--memory", "384"]
         end
         config.vm.provider "docker" do |dckr|
-            dckr.build.dir = "./php"
+            dckr.build_dir = "./php"
         end
         config.vm.network "public_network", :bridge => 'wlan0'
         config.ssh.forward_agent = true
@@ -57,7 +57,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vb.customize ["modifyvm", :id, "--memory", "512"]
         end
         config.vm.provider "docker" do |dckr|
-            dckr.build.dir = "./database"
+            dckr.build_dir = "./database"
         end
         config.vm.network "public_network", :bridge => 'wlan0'
         config.ssh.forward_agent = true
