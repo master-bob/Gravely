@@ -1,3 +1,2 @@
-FROM blakedickie/arch-mariadb:latest
-RUN sudo pacman -Syu
+FROM sulhan/arch-postgresql:latest
 

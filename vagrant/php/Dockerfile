@@ -1,3 +1,3 @@
 FROM derjudge/archlinux-apache-php
-RUN sudo pacman -Syu
+RUN pacman -Syu --noconfirm
 
