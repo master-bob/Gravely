@@ -15,8 +15,9 @@ install_sudo(){
 }
 
 install_sudo
-while [ $? -ne 0]; do install_sudo; done
+while [ $? -ne 0 ]; do install_sudo; done
 
 setup_user
-while [ $? -ne 0]; do setup_user; done
+while [ $? -ne 0 ]; do setup_user; done
+
 rm config.sh

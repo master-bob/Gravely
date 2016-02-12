@@ -59,8 +59,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         config.vm.provider "docker" do |dckr|
             dckr.build_dir = "./database"
         end
-        config.vm.network "public_network", :bridge => 'wlan0'
-        config.ssh.forward_agent = true
     end
  
 end

@@ -1,7 +1,3 @@
-FROM sulhan/arch-postgresql:latest
+FROM postgres:9.5 
 MAINTAINER masterbob <masterbob@gmail.com >
-
-COPY ../../db_id_ed25519.pub /
-COPY ../sshd_config /
-
 
