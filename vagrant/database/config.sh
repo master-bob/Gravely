@@ -1,3 +1,5 @@
-port=4545
-user=the_backend
-password='MySQL can rott.'
+#!/bin/sh
+
+if [ -z "$POSTGRES_PASSWORD" ]; then
+    export POSTGRES_PASSWORD = 'MySQL can rott.'
+fi
