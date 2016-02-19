@@ -32,23 +32,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         config.vm.provider "docker" do |d|
             d.build_dir = "."
             d.remains_running = true
-            d.has_ssh = true
-            config.ssh.username = "root"
+            #d.has_ssh = true
+            #config.ssh.username = "root"
         end
     end
  
     # PHP servers
-    config.vm.define 'php1' do |machine|
-        config.vm.host_name = 'php1'
-        config.vm.provider "virtualbox" do |vb|
-            vb.customize ["modifyvm", :id, "--memory", "384"]
-        end
-        config.vm.provider "docker" do |dckr|
-            dckr.build_dir = "./php"
-        end
-        config.vm.network "public_network", :bridge => 'wlan0'
-        config.ssh.forward_agent = true
-    end
+#    config.vm.define 'php1' do |machine|
+#        config.vm.host_name = 'php1'
+#        config.vm.provider "virtualbox" do |vb|
+#            vb.customize ["modifyvm", :id, "--memory", "384"]
+#        end
+#        config.vm.provider "docker" do |dckr|
+#            dckr.build_dir = "./apache"
+#        end
+#        config.vm.network "public_network", :bridge => 'wlan0'
+#        config.ssh.forward_agent = true
+#    end
  
     # Database servers
     config.vm.define 'database1' do |machine|
@@ -58,6 +58,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
         config.vm.provider "docker" do |dckr|
             dckr.build_dir = "./database"
+            dckr.env = {
+                "POSTGRES_PASSWORD" => ""
+            }
         end
     end
  
