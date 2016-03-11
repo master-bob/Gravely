@@ -1,5 +1,5 @@
 # -*- mode: ruby -*-
-# vi: set ft=ruby :
+# vi: set ft=ruby:
 
 # Created by Pierre Mavro 
 # Modified by Leonardo Canessa
@@ -7,7 +7,11 @@
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
- 
+
+# These are configuration variables used in the script
+PERSISTENT_DATA_LOCATION = "data/"
+POSTGRESQL_USER_PASSWORD = ""
+
 # You can override those vars by using shell environment vars 
 vb_box = (ENV['VAGRANT_VB_BOX'] || 'iknite/trusty64')
 # Workaround for mitchellh/vagrant#1867 / source: https://groups.google.com/forum/#!topic/vagrant-up/XIxGdm78s4I
@@ -30,7 +34,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Docker settings
     if "#{provider}" == "docker"
         config.vm.provider "docker" do |d|
-            d.build_dir = "."
             d.remains_running = true
             #d.has_ssh = true
             #config.ssh.username = "root"
@@ -52,16 +55,31 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
  
     # Database servers
     config.vm.define 'database1' do |machine|
-        config.vm.host_name = 'database1'
-        config.vm.provider "virtualbox" do |vb|
+        machine.vm.host_name = 'database1'
+        machine.vm.provider "virtualbox" do |vb|
             vb.customize ["modifyvm", :id, "--memory", "512"]
         end
-        config.vm.provider "docker" do |dckr|
+        machine.vm.provider "docker" do |dckr|
             dckr.build_dir = "./database"
+            dckr.create_args = [
+                "--volumes-from", "persistent"
+            ]
             dckr.env = {
-                "POSTGRES_PASSWORD" => ""
+                "POSTGRES_PASSWORD" => "#{POSTGRESQL_USER_PASSWORD}"
             }
         end
     end
- 
+    
+    config.vm.define 'persistent' do |machine|
+        machine.vm.host_name = 'persistent'
+        machine.vm.synced_folder "#{PERSISTENT_DATA_LOCATION}", "/var/lib/postgresql/data"
+        machine.vm.provider "virtualbox" do |vb|
+            vb.customize ["modifyvm", :id, "--memory", "512"]
+        end
+        machine.vm.provider "docker" do |dckrp|
+            dckrp.build_dir = "./persistent"
+            dckrp.name = "persistent"
+            dckrp.remains_running = false
+        end
+    end    
 end
