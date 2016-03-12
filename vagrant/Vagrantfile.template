@@ -54,6 +54,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 #    end
  
     # Database servers
+    config.vm.define 'persistent' do |machine|
+        machine.vm.host_name = 'persistent'
+        machine.vm.synced_folder "#{PERSISTENT_DATA_LOCATION}", "/var/lib/postgresql/data"
+        machine.vm.provider "virtualbox" do |vb|
+            vb.customize ["modifyvm", :id, "--memory", "512"]
+        end
+        machine.vm.provider "docker" do |dckr|
+            dckr.build_dir = "./persistent"
+            dckr.name = "persistent"
+            dckr.remains_running = false
+            dckr.cmd = [
+                "/bin/echo 'Persistent Data Container for db'"
+            ]
+        end
+    end
+
     config.vm.define 'database1' do |machine|
         machine.vm.host_name = 'database1'
         machine.vm.provider "virtualbox" do |vb|
@@ -69,17 +85,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             }
         end
     end
-    
-    config.vm.define 'persistent' do |machine|
-        machine.vm.host_name = 'persistent'
-        machine.vm.synced_folder "#{PERSISTENT_DATA_LOCATION}", "/var/lib/postgresql/data"
-        machine.vm.provider "virtualbox" do |vb|
-            vb.customize ["modifyvm", :id, "--memory", "512"]
-        end
-        machine.vm.provider "docker" do |dckrp|
-            dckrp.build_dir = "./persistent"
-            dckrp.name = "persistent"
-            dckrp.remains_running = false
-        end
-    end    
 end
