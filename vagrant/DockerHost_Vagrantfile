@@ -1,0 +1,32 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby:
+
+# Docker Host VM to run Docker containers
+# Created by Leonardo Canessa
+# Original author Mario Loriedo
+
+Vagrant.configure("2") do |config|
+    config.vm.provision "docker"
+
+    # The following line terminates all ssh connections. Therefore
+    # Vagrant will be forced to reconnect.
+    # That's a workaround to have the docker command in the PATH
+    config.vm.provision "shell", inline:
+        "ps aux | grep 'sshd:' | awk '{print $2}' | xargs kill"
+
+    config.vm.define "dockerhost"
+    config.vm.box = "terrywang/archlinux"
+    config.vm.network "forwarded_port",
+        guest: 8080, host: 8080
+
+    # Private network must be static to allow Vagrant to configure NFS
+    config.vm.network "private_network", ip: "192.168.111.111"
+    
+    # Folder sharing must be NFS for Alpine host
+    config.vm.synced_folder ".", "/vagrant", type: "nfs"
+
+    config.vm.provider :virtualbox do |vb|
+        vb.name = "dockerhost"
+    end
+
+end

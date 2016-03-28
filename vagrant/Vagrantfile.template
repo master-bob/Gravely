@@ -35,6 +35,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     if "#{provider}" == "docker"
         config.vm.provider "docker" do |d|
             d.remains_running = true
+            d.vagrant_machine = "dockerhostvm"
+            d.vagrant_vagrantfile = "./DockerHost_Vagrantfile"
             #d.has_ssh = true
             #config.ssh.username = "root"
         end
