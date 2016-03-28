@@ -42,19 +42,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
     end
  
-    # PHP servers
-#    config.vm.define 'php1' do |machine|
-#        config.vm.host_name = 'php1'
-#        config.vm.provider "virtualbox" do |vb|
-#            vb.customize ["modifyvm", :id, "--memory", "384"]
-#        end
-#        config.vm.provider "docker" do |dckr|
-#            dckr.build_dir = "./apache"
-#        end
-#        config.vm.network "public_network", :bridge => 'wlan0'
-#        config.ssh.forward_agent = true
-#    end
- 
     # Database servers
     config.vm.define 'persistent' do |machine|
         machine.vm.host_name = 'persistent'
@@ -86,5 +73,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 "POSTGRES_PASSWORD" => "#{POSTGRESQL_USER_PASSWORD}"
             }
         end
+    end
+    
+    # PHP servers
+    config.vm.define 'php1' do |machine|
+        machine.vm.host_name = 'php1'
+        machine.vm.provider "virtualbox" do |vb|
+            vb.customize ["modifyvm", :id, "--memory", "384"]
+        end
+        machine.vm.provider "docker" do |dckr|
+            dckr.build_dir = "./php"
+            dckr.cmd = [
+                "/bin/echo 'PHPPPPPP?'"
+            ]
+        end
+        machine.vm.network "public_network", :bridge => 'wlan0'
+        machine.ssh.forward_agent = true
     end
 end
